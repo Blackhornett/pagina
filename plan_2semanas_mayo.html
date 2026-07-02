@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan 2 Semanas · Maratón Santiago 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0e0e0e; --bg2:#161616; --bg3:#1e1e1e; --border:#2a2a2a;
+    --accent:#c8ff00; --accent2:#00d4ff; --orange:#ff6b35;
+    --purple:#b06fff; --red:#ff3b3b; --green:#00e676;
+    --text:#f0f0f0; --muted:#555; --muted2:#333;
+    --z2:#29b6f6; --largo:#00e5ff; --gym:#b06fff; --rest:#2a2a2a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--text);font-family:'Mulish',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-tab{flex-shrink:0;padding:14px 18px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap}
+  .nav-tab:hover{color:var(--text)}
+  .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+  .view{display:none}
+  .view.active{display:block}
+
+  /* HERO */
+  .hero{padding:28px 20px 20px;border-bottom:1px solid var(--border)}
+  .hero-badge{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);background:rgba(200,255,0,0.08);border:1px solid rgba(200,255,0,0.2);padding:4px 12px;display:inline-block;margin-bottom:10px}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:2px;line-height:1;margin-bottom:6px}
+  .hero p{font-size:12px;color:var(--muted);line-height:1.5}
+  .hero-meta{display:flex;gap:0;margin-top:16px;border:1px solid var(--border);width:fit-content}
+  .hm{padding:10px 16px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
+  .hm:last-child{border-right:none}
+  .hm-l{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .hm-v{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px}
+
+  /* ANÁLISIS CARD */
+  .analisis-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin:0}
+  .an-card{background:var(--bg2);padding:18px 20px}
+  .an-card.full{grid-column:1/-1}
+  .an-label{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .an-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+  .an-row:last-child{border-bottom:none}
+  .an-key{color:var(--muted)}
+  .an-val{font-weight:600}
+  .ok{color:var(--green)} .warn{color:var(--orange)} .crit{color:var(--red)} .info{color:var(--accent2)}
+
+  /* SEMANA GRID */
+  .semana-wrap{border-bottom:1px solid var(--border)}
+  .semana-title{padding:20px 20px 14px;display:flex;align-items:center;gap:16px}
+  .s-num{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--muted2);line-height:1;width:48px;flex-shrink:0}
+  .s-info h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
+  .s-info p{font-size:11px;color:var(--muted);margin-top:2px}
+  .s-vol{margin-left:auto;text-align:right}
+  .s-vol span{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent)}
+  .s-vol small{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+
+  /* DIA CARDS */
+  .dias{display:flex;flex-direction:column;gap:1px;background:var(--border);border-top:1px solid var(--border)}
+  .dia{background:var(--bg2);padding:0}
+  .dia-header{padding:14px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background 0.15s;user-select:none}
+  .dia-header:hover{background:var(--bg3)}
+  .dia-header.expanded{background:var(--bg3)}
+  .dia.rest .dia-header{opacity:0.55;cursor:default}
+  .dia.rest .dia-header:hover{background:var(--bg2)}
+
+  .dia-fecha{width:40px;flex-shrink:0;text-align:center}
+  .dia-fecha .dd{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;color:var(--text)}
+  .dia-fecha .dm{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+  .dia-color{width:3px;height:36px;flex-shrink:0;border-radius:2px}
+  .dia-body-info{flex:1}
+  .dia-tipo{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .dia-nombre{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.5px;line-height:1.1}
+  .dia-sub{font-size:10px;color:var(--muted);margin-top:2px}
+  .dia-chip{font-size:9px;font-weight:700;padding:4px 9px;flex-shrink:0;border:1px solid}
+  .dia-chevron{font-size:10px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+  .dia-header.expanded .dia-chevron{transform:rotate(180deg)}
+  .dia.today .dia-header{background:rgba(200,255,0,0.04)}
+  .today-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.5s infinite;flex-shrink:0}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+  /* DIA CONTENT */
+  .dia-content{display:none;padding:0 20px 16px;border-top:1px solid var(--border)}
+  .dia-content.open{display:block}
+
+  /* BLOQUES */
+  .bloque-mini{margin:12px 0 0;border:1px solid var(--border);overflow:hidden}
+  .bm-tag{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 12px;background:var(--bg3);color:var(--muted);border-bottom:1px solid var(--border)}
+  .superserie{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--border)}
+  .superserie:last-child{border-bottom:none}
+  .ss-ej{flex:1;background:var(--bg);padding:10px;border:1px solid var(--border)}
+  .ss-ej.a{border-top:2px solid var(--accent)}
+  .ss-ej.b{border-top:2px solid var(--accent2)}
+  .ss-letter{font-family:'Bebas Neue',sans-serif;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:2px}
+  .ss-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.2}
+  .ss-specs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px}
+  .ss-spec{font-size:9px;padding:2px 6px;border:1px solid var(--border);color:var(--muted)}
+  .ss-spec.reps{border-color:rgba(200,255,0,0.3);color:var(--accent)}
+  .ss-spec.kg{border-color:rgba(0,212,255,0.3);color:var(--accent2)}
+  .ss-tip{font-size:10px;color:var(--muted);line-height:1.4;border-top:1px solid var(--border);padding-top:4px;margin-top:2px}
+  .ss-arrow{display:flex;align-items:center;color:var(--orange);font-weight:700;font-size:14px;flex-shrink:0}
+
+  .descanso-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,212,255,0.04);border-bottom:1px solid rgba(0,212,255,0.1);cursor:pointer;transition:background 0.15s}
+  .descanso-row:hover{background:rgba(0,212,255,0.08)}
+  .dr-text{font-size:10px;color:var(--accent2);font-weight:600;flex:1}
+  .dr-btn{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--accent2);padding:3px 8px;cursor:pointer}
+
+  .series-track{display:flex;align-items:center;gap:8px;padding:8px 12px 4px}
+  .st-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+  .st-dots{display:flex;gap:5px}
+  .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);transition:all 0.15s}
+  .dot.done{background:var(--accent);border-color:var(--accent);color:#000}
+  .dot:hover:not(.done){border-color:var(--accent);color:var(--accent)}
+  .st-reset{font-size:9px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-left:2px}
+
+  /* CARRERA FASES */
+  .run-fase{padding:12px 0;border-bottom:1px solid var(--border);display:flex;gap:12px}
+  .run-fase:last-child{border-bottom:none}
+  .rf-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--muted2);line-height:1;width:28px;flex-shrink:0}
+  .rf-body{flex:1}
+  .rf-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.5px;margin-bottom:3px}
+  .rf-detail{font-size:11px;color:var(--muted);line-height:1.5}
+  .rf-chip{font-size:9px;font-weight:700;padding:2px 8px;border:1px solid;margin-top:6px;display:inline-block}
+  .chip-z2{border-color:rgba(41,182,246,0.3);color:var(--z2);background:rgba(41,182,246,0.08)}
+  .chip-z4{border-color:rgba(255,213,79,0.3);color:#ffd54f;background:rgba(255,213,79,0.06)}
+  .chip-fast{border-color:rgba(200,255,0,0.3);color:var(--accent);background:rgba(200,255,0,0.06)}
+  .chip-walk{border-color:var(--border);color:var(--muted);background:var(--bg3)}
+  .chip-gel{border-color:rgba(255,107,53,0.3);color:var(--orange);background:rgba(255,107,53,0.06)}
+
+  /* NOTA */
+  .nota{margin:12px 0 0;padding:10px 12px;background:rgba(200,255,0,0.04);border-left:3px solid var(--accent);font-size:11px;color:var(--muted);line-height:1.5}
+  .nota strong{color:var(--accent)}
+  .nota.info{background:rgba(0,212,255,0.04);border-left-color:var(--accent2)}
+  .nota.info strong{color:var(--accent2)}
+  .nota.warn{background:rgba(255,107,53,0.04);border-left-color:var(--orange)}
+  .nota.warn strong{color:var(--orange)}
+
+  /* TIMER */
+  .timer-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.93);display:none;align-items:center;justify-content:center;flex-direction:column}
+  .timer-overlay.show{display:flex}
+  .timer-box{text-align:center;padding:36px 28px;background:var(--bg2);border:1px solid var(--border);width:88%;max-width:300px;animation:pop 0.2s ease}
+  @keyframes pop{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .timer-label{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+  .timer-display{font-family:'Bebas Neue',sans-serif;font-size:88px;color:var(--text);letter-spacing:4px;line-height:1;margin-bottom:6px;transition:color 0.3s}
+  .timer-display.urgent{color:var(--orange)}
+  .timer-display.done{color:var(--green)}
+  .timer-progress{width:100%;height:3px;background:var(--border);margin-bottom:20px;overflow:hidden}
+  .timer-bar{height:100%;background:var(--accent2);transition:width 1s linear,background 0.3s}
+  .timer-bar.urgent{background:var(--orange)}
+  .timer-btns{display:flex;gap:8px}
+  .tbtn{flex:1;padding:12px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;cursor:pointer;border:none;transition:all 0.15s}
+  .tbtn-skip{background:var(--bg3);color:var(--muted)}
+  .tbtn-stop{background:rgba(255,59,59,0.15);color:var(--red);border:1px solid rgba(255,59,59,0.3)}
+
+  /* PROGRESION BADGE */
+  .prog-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;padding:3px 10px;background:rgba(200,255,0,0.08);border:1px solid rgba(200,255,0,0.2);color:var(--accent);margin-top:6px}
+
+  section{padding:20px;border-bottom:1px solid var(--border)}
+  .section-title{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+  footer{padding:20px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
+  footer strong{color:var(--accent)}
+
+  @media(max-width:600px){
+    .analisis-grid{grid-template-columns:1fr}
+    .an-card.full{grid-column:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- TIMER MODAL -->
+<div class="timer-overlay" id="timerOverlay">
+  <div class="timer-box">
+    <div class="timer-label">⏱ DESCANSO</div>
+    <div class="timer-display" id="timerDisplay">60</div>
+    <div class="timer-progress"><div class="timer-bar" id="timerBar" style="width:100%"></div></div>
+    <div class="timer-btns">
+      <button class="tbtn tbtn-skip" onclick="skipTimer()">SALTAR ⏭</button>
+      <button class="tbtn tbtn-stop" onclick="stopTimer()">✕ CERRAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-tab active" onclick="showView('resumen')">📊 Análisis</div>
+  <div class="nav-tab" onclick="showView('sem1')">📅 Semana 1</div>
+  <div class="nav-tab" onclick="showView('sem2')">📅 Semana 2</div>
+  <div class="nav-tab" onclick="showView('gym-a')">💪 Gym A</div>
+  <div class="nav-tab" onclick="showView('gym-b')">💪 Gym B</div>
+</nav>
+
+<!-- ======================================================= -->
+<!-- ANÁLISIS -->
+<!-- ======================================================= -->
+<div class="view active" id="view-resumen">
+  <div class="hero">
+    <div class="hero-badge">Análisis semana + plan 2 semanas</div>
+    <h1>DÓNDE ESTÁS<br>Y HACIA DÓNDE VAS</h1>
+    <p>Basado en datos Garmin 17.05.2026 + reporte de entrenamiento</p>
+    <div class="hero-meta">
+      <div class="hm"><div class="hm-l">HRV hoy</div><div class="hm-v warn" style="color:var(--orange)">60 ms</div></div>
+      <div class="hm"><div class="hm-l">ACWR real est.</div><div class="hm-v warn" style="color:var(--orange)">~0.52</div></div>
+      <div class="hm"><div class="hm-l">VO2max</div><div class="hm-v" style="color:var(--accent2)">49.8</div></div>
+      <div class="hm"><div class="hm-l">Estado</div><div class="hm-v" style="color:var(--accent2)">RECOVERY</div></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-title">Lo que hiciste esta semana</div>
+    <div class="analisis-grid">
+      <div class="an-card">
+        <div class="an-label">✅ Lo que salió bien</div>
+        <div class="an-row"><span class="an-key">Z2 jueves 8 km</span><span class="an-val ok">FC 138 lpm ✓</span></div>
+        <div class="an-row"><span class="an-key">Sensación Z2</span><span class="an-val ok">Cómoda — zona correcta</span></div>
+        <div class="an-row"><span class="an-key">Gym viernes (Día B)</span><span class="an-val ok">Completado + aprendizaje</span></div>
+        <div class="an-row"><span class="an-key">Funcional sábado</span><span class="an-val ok">Carga extra moderada</span></div>
+        <div class="an-row"><span class="an-key">HRV semanal</span><span class="an-val ok">66 ms — balanced</span></div>
+      </div>
+      <div class="an-card">
+        <div class="an-label">⚠️ Lo que faltó</div>
+        <div class="an-row"><span class="an-key">Día A (piernas)</span><span class="an-val crit">No se hizo</span></div>
+        <div class="an-row"><span class="an-key">Largo 15 km</span><span class="an-val crit">No se hizo</span></div>
+        <div class="an-row"><span class="an-key">Z2 + Strides</span><span class="an-val warn">Solo 868m registrados</span></div>
+        <div class="an-row"><span class="an-key">Funcional Garmin</span><span class="an-val warn">No registrado</span></div>
+        <div class="an-row"><span class="an-key">HRV hoy</span><span class="an-val warn">60 ms — borde inferior</span></div>
+      </div>
+      <div class="an-card full">
+        <div class="an-label">🔍 Interpretación de los datos</div>
+        <div class="an-row"><span class="an-key">FC promedio Z2 (138 lpm) a sensación cómoda</span><span class="an-val ok">Buena base aeróbica</span></div>
+        <div class="an-row"><span class="an-key">VO2max bajó de 50.1 → 49.8</span><span class="an-val warn">Normal por detraining — remontará</span></div>
+        <div class="an-row"><span class="an-key">HRV hoy 60 ms (ayer funcional 2h)</span><span class="an-val warn">Sistema nervioso levemente fatigado</span></div>
+        <div class="an-row"><span class="an-key">ACWR real estimado ~0.52</span><span class="an-val warn">Bajo pero mejor que 0.26 inicial</span></div>
+        <div class="an-row"><span class="an-key">Pesos gym viernes (Día B)</span><span class="an-val info">Línea base establecida</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Pesos de referencia establecidos (Día B)</div>
+    <div class="analisis-grid">
+      <div class="an-card">
+        <div class="an-label">Cargas viernes pasado</div>
+        <div class="an-row"><span class="an-key">Pull down (jalón)</span><span class="an-val info">31 kg × 3 series</span></div>
+        <div class="an-row"><span class="an-key">Remo polea</span><span class="an-val info">31 kg × 3 series</span></div>
+        <div class="an-row"><span class="an-key">Press inclinado</span><span class="an-val info">12.5 kg/mano × 3 series</span></div>
+        <div class="an-row"><span class="an-key">Face pull</span><span class="an-val info">40 kg × 3 series</span></div>
+        <div class="an-row"><span class="an-key">Press hombro</span><span class="an-val info">12.5 kg/mano × 3 series</span></div>
+        <div class="an-row"><span class="an-key">Curl bíceps polea</span><span class="an-val info">35 kg (s1) / 40 kg (s2-3)</span></div>
+      </div>
+      <div class="an-card">
+        <div class="an-label">Progresión semanas siguientes</div>
+        <div class="an-row"><span class="an-key">Pull down</span><span class="an-val ok">Sem 1: 33 kg · Sem 2: 35 kg</span></div>
+        <div class="an-row"><span class="an-key">Remo polea</span><span class="an-val ok">Sem 1: 33 kg · Sem 2: 35 kg</span></div>
+        <div class="an-row"><span class="an-key">Press inclinado</span><span class="an-val ok">Sem 1: 13.5 kg · Sem 2: 15 kg</span></div>
+        <div class="an-row"><span class="an-key">Face pull</span><span class="an-val ok">Sem 1: 42 kg · Sem 2: 45 kg</span></div>
+        <div class="an-row"><span class="an-key">Press hombro</span><span class="an-val ok">Sem 1: 13.5 kg · Sem 2: 15 kg</span></div>
+        <div class="an-row"><span class="an-key">Curl bíceps</span><span class="an-val ok">Sem 1: 40 kg todo · Sem 2: 42 kg</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Estrategia 2 semanas</div>
+    <div class="analisis-grid">
+      <div class="an-card">
+        <div class="an-label">📅 Semana 1 · 18–24 May · Transición</div>
+        <div class="an-row"><span class="an-key">Volumen carrera</span><span class="an-val ok">~35 km</span></div>
+        <div class="an-row"><span class="an-key">Días gym</span><span class="an-val ok">2 (A + B completos)</span></div>
+        <div class="an-row"><span class="an-key">Largo</span><span class="an-val ok">16 km Z2</span></div>
+        <div class="an-row"><span class="an-key">Calidad</span><span class="an-val ok">1 fartlek suave</span></div>
+        <div class="an-row"><span class="an-key">ACWR objetivo fin</span><span class="an-val ok">0.65–0.75</span></div>
+      </div>
+      <div class="an-card">
+        <div class="an-label">📅 Semana 2 · 25–31 May · Construcción</div>
+        <div class="an-row"><span class="an-key">Volumen carrera</span><span class="an-val ok">~42 km</span></div>
+        <div class="an-row"><span class="an-key">Días gym</span><span class="an-val ok">2 (A + B con +5% carga)</span></div>
+        <div class="an-row"><span class="an-key">Largo</span><span class="an-val ok">18 km Z2</span></div>
+        <div class="an-row"><span class="an-key">Calidad</span><span class="an-val ok">1 tempo (primer umbral)</span></div>
+        <div class="an-row"><span class="an-key">ACWR objetivo fin</span><span class="an-val ok">0.80–0.90</span></div>
+      </div>
+    </div>
+    <div class="nota info" style="margin-top:14px">
+      <strong>Nota sobre el funcional:</strong> si vas a otra clase de crossfit/funcional alguna de estas semanas, avísame para ajustar la carga de esa semana. Dos horas de funcional equivalen aproximadamente a una sesión de gym A + 8 km de carrera en términos de estrés fisiológico.
+    </div>
+  </section>
+</div>
+
+<!-- ======================================================= -->
+<!-- SEMANA 1 -->
+<!-- ======================================================= -->
+<div class="view" id="view-sem1">
+  <div class="semana-wrap">
+    <div class="semana-title">
+      <div class="s-num">01</div>
+      <div class="s-info">
+        <h2>TRANSICIÓN</h2>
+        <p>18–24 Mayo · Recuperar el Día A perdido · Primer largo real</p>
+      </div>
+      <div class="s-vol"><span>35 km</span><small>+ 2 gym</small></div>
+    </div>
+
+    <div class="dias">
+
+      <!-- LUNES 18 - HOY - Z2 -->
+      <div class="dia today" id="dia-18">
+        <div class="dia-header" onclick="toggleDia('dia-18')">
+          <div class="dia-fecha"><div class="dd">18</div><div class="dm">Lun</div></div>
+          <div class="dia-color" style="background:var(--z2)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🔵 Hoy · Carrera · Z2 Base</div>
+            <div class="dia-nombre">RODAJE FÁCIL 9 KM</div>
+            <div class="dia-sub">FC 130–148 lpm · Alarma Garmin activada</div>
+          </div>
+          <div class="dia-chip" style="color:var(--z2);border-color:rgba(41,182,246,0.3);background:rgba(41,182,246,0.08)">9 KM</div>
+          <div class="dia-chevron">▼</div>
+          <div class="today-dot"></div>
+        </div>
+        <div class="dia-content" id="content-18">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">9 km Z2 continuo</div>
+              <div class="rf-detail">FC 130–148 lpm todo el rato. +1 km respecto al jueves pasado. Si la FC sube de 148, baja el ritmo o camina 30 seg. El pace no importa — la FC sí.</div>
+              <span class="rf-chip chip-z2">Z2 · 130–148 lpm</span>
+            </div>
+          </div>
+          <div class="nota"><strong>Dato clave:</strong> el jueves pasado hiciste 8 km a FC 138 lpm cómodo. Hoy apunta a mantener esa misma sensación 1 km más. Si al final sigues cómodo, la adaptación aeróbica ya está ocurriendo.</div>
+        </div>
+      </div>
+
+      <!-- MARTES 19 - GYM A -->
+      <div class="dia" id="dia-19">
+        <div class="dia-header" onclick="toggleDia('dia-19')">
+          <div class="dia-fecha"><div class="dd">19</div><div class="dm">Mar</div></div>
+          <div class="dia-color" style="background:var(--gym)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">💪 Gimnasio · Día A</div>
+            <div class="dia-nombre">TREN INFERIOR</div>
+            <div class="dia-sub">Hack Squat · Booty Builder · Abductores/Aductores · Core</div>
+          </div>
+          <div class="dia-chip" style="color:var(--gym);border-color:rgba(176,111,255,0.3);background:rgba(176,111,255,0.08)">40 MIN</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-19">
+          <div class="nota warn"><strong>Primera vez con Día A completo.</strong> Cargas moderadas — aprende los movimientos. El Hack Squat y Booty Builder son nuevos para ti esta semana.</div>
+          <div class="nota info" style="margin-top:8px"><strong>Recuerda:</strong> llegas con 5 min de trote → entras directo al bloque 1.</div>
+          <div style="text-align:center;margin-top:12px"><button onclick="showView('gym-a')" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;background:var(--gym);color:#fff;border:none;padding:12px 28px;cursor:pointer;width:100%">VER RUTINA COMPLETA DÍA A →</button></div>
+        </div>
+      </div>
+
+      <!-- MIÉRCOLES 20 - REGENERATIVO -->
+      <div class="dia" id="dia-20">
+        <div class="dia-header" onclick="toggleDia('dia-20')">
+          <div class="dia-fecha"><div class="dd">20</div><div class="dm">Mié</div></div>
+          <div class="dia-color" style="background:var(--green)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🟢 Carrera · Regenerativo</div>
+            <div class="dia-nombre">RODAJE SUAVE 6 KM</div>
+            <div class="dia-sub">FC máx 140 lpm · Recuperación activa post-Gym A</div>
+          </div>
+          <div class="dia-chip" style="color:var(--green);border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.06)">6 KM</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-20">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">6 km Z1-Z2 muy suave</div>
+              <div class="rf-detail">FC máxima 140 lpm — más bajo que el Z2 normal. Ritmo de paseo rápido. El objetivo no es generar adaptación sino activar la circulación, limpiar lactato residual del Gym A y llegar mejor al fartlek del jueves.</div>
+              <span class="rf-chip" style="border-color:rgba(0,230,118,0.3);color:var(--green);background:rgba(0,230,118,0.06)">Z1-Z2 · máx 140 lpm</span>
+            </div>
+          </div>
+          <div class="nota info"><strong>¿Por qué correr después del gym?</strong> Un rodaje regenerativo el día después de fuerza acelera la recuperación muscular hasta un 20% comparado con el descanso completo. Tiene que ser MUY suave — si la FC sube de 140, camina.</div>
+        </div>
+      </div>
+
+      <!-- MIÉRCOLES 21 - DESCANSO -->
+      <!-- JUEVES 21 - FARTLEK -->
+      <div class="dia" id="dia-22">
+        <div class="dia-header" onclick="toggleDia('dia-22')">
+          <div class="dia-fecha"><div class="dd">21</div><div class="dm">Jue</div></div>
+          <div class="dia-color" style="background:var(--orange)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🟠 Carrera · Fartlek suave</div>
+            <div class="dia-nombre">FARTLEK 10 KM</div>
+            <div class="dia-sub">Base Z2 + velocidades libres · Primera sesión de calidad</div>
+          </div>
+          <div class="dia-chip" style="color:var(--orange);border-color:rgba(255,107,53,0.3);background:rgba(255,107,53,0.08)">10 KM</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-22">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">3 km calentamiento Z2</div>
+              <div class="rf-detail">Suave, FC bajo 145 lpm. Activa el cuerpo para lo que viene.</div>
+              <span class="rf-chip chip-z2">Z2</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">02</div>
+            <div class="rf-body">
+              <div class="rf-name">6 × (1 min rápido / 2 min suave)</div>
+              <div class="rf-detail">1 min acelerando a Z4 (160–168 lpm) → 2 min trotando suave en Z2. 6 repeticiones. El minuto rápido no es sprint — es ritmo sostenido pero exigente. Déjate llevar.</div>
+              <span class="rf-chip chip-z4" style="margin-right:4px">1' Z4</span>
+              <span class="rf-chip chip-z2">2' Z2</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">03</div>
+            <div class="rf-body">
+              <div class="rf-name">1 km vuelta a la calma</div>
+              <div class="rf-detail">Trote muy suave o caminata. FC bajando bajo 130 lpm.</div>
+              <span class="rf-chip chip-walk">Calma</span>
+            </div>
+          </div>
+          <div class="nota"><strong>¿Por qué fartlek y no tempo?</strong> El fartlek es más libre — aceleras cuando quieres, te recuperas cuando necesitas. Menos rígido que el intervalo puro. Perfecto para la primera sesión de calidad después de semanas de detraining.</div>
+        </div>
+      </div>
+
+      <!-- VIERNES 23 - GYM B -->
+      <div class="dia" id="dia-23">
+        <div class="dia-header" onclick="toggleDia('dia-23')">
+          <div class="dia-fecha"><div class="dd">22</div><div class="dm">Vie</div></div>
+          <div class="dia-color" style="background:var(--gym)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">💪 Gimnasio · Día B</div>
+            <div class="dia-nombre">TREN SUPERIOR</div>
+            <div class="dia-sub">+5–10% carga vs semana pasada · Rutina completa esta vez</div>
+          </div>
+          <div class="dia-chip" style="color:var(--gym);border-color:rgba(176,111,255,0.3);background:rgba(176,111,255,0.08)">40 MIN</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-23">
+          <div class="nota warn"><strong>Esta vez completo:</strong> la semana pasada no alcanzaste el bloque de core ni crossover. Esta semana sí. Usa el timer de descanso para no pasarte de tiempo.</div>
+          <div class="nota" style="margin-top:8px"><strong>Cargas objetivo hoy:</strong> Pull down 33 kg · Remo 33 kg · Press inclinado 13.5 kg/mano · Face pull 42 kg · Press hombro 13.5 kg/mano · Curl bíceps 40 kg todo.</div>
+          <div style="text-align:center;margin-top:12px"><button onclick="showView('gym-b')" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;background:var(--gym);color:#fff;border:none;padding:12px 28px;cursor:pointer;width:100%">VER RUTINA COMPLETA DÍA B →</button></div>
+        </div>
+      </div>
+
+      <!-- SÁBADO 23 - LARGO -->
+      <div class="dia" id="dia-24">
+        <div class="dia-header" onclick="toggleDia('dia-24')">
+          <div class="dia-fecha"><div class="dd">23</div><div class="dm">Sáb</div></div>
+          <div class="dia-color" style="background:var(--largo)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🩵 Carrera · Tirada Larga</div>
+            <div class="dia-nombre">LARGO Z2 · 16 KM</div>
+            <div class="dia-sub">FC 130–148 lpm · Gel al km 10 · El más importante de la semana</div>
+          </div>
+          <div class="dia-chip" style="color:var(--largo);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06)">16 KM</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-24">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 0–5 · Activación Z2</div>
+              <div class="rf-detail">Los primeros km pueden sentirse pesados después del gym del viernes. Normal. Dale 10–15 min para que la FC se estabilice. Sin apuro.</div>
+              <span class="rf-chip chip-z2">Z2 · Paciencia</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">02</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 5–10 · Ritmo crucero</div>
+              <div class="rf-detail">FC estabilizada en Z2. Hidratación cada 20 min. Prepara el gel. Este es el bloque más importante — construyes base mitocondrial.</div>
+              <span class="rf-chip chip-z2">Z2 · 130–148 lpm</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">03</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 10 · Gel obligatorio</div>
+              <div class="rf-detail">Aunque no tengas hambre. Gel + agua. Practica la estrategia de carrera.</div>
+              <span class="rf-chip chip-gel">Gel + agua</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">04</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 10–16 · Mantener Z2</div>
+              <div class="rf-detail">La FC puede subir 2–3 lpm aunque el ritmo sea el mismo (cardiac drift). Normal. Si pasa de 151 lpm, baja el ritmo levemente.</div>
+              <span class="rf-chip chip-z2">Z2 · Aguanta</span>
+            </div>
+          </div>
+          <div class="nota"><strong>Métrica a anotar:</strong> pace promedio durante el largo. En 3–4 semanas ese mismo pace debería darte FC 3–5 lpm más baja. Ahí verás la adaptación.</div>
+        </div>
+      </div>
+
+      <!-- DOMINGO 25 - DESCANSO -->
+      <div class="dia rest">
+        <div class="dia-header">
+          <div class="dia-fecha"><div class="dd">24</div><div class="dm">Dom</div></div>
+          <div class="dia-color" style="background:var(--muted2)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">— Descanso total</div>
+            <div class="dia-nombre">RECUPERACIÓN</div>
+            <div class="dia-sub">Sueño 7.5–8h · Proteína alta · Revisa HRV martes</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dias -->
+  </div><!-- /semana-wrap -->
+</div>
+
+<!-- ======================================================= -->
+<!-- SEMANA 2 -->
+<!-- ======================================================= -->
+<div class="view" id="view-sem2">
+  <div class="semana-wrap">
+    <div class="semana-title">
+      <div class="s-num">02</div>
+      <div class="s-info">
+        <h2>CONSTRUCCIÓN</h2>
+        <p>26–31 Mayo · Gym A ✅ hecho · Regenerativo · Z2+Strides · Gym B · Tempo · Largo 18km</p>
+      </div>
+      <div class="s-vol"><span>43 km</span><small>+ 1 gym restante</small></div>
+    </div>
+
+    <div class="dias">
+
+      <!-- MARTES 26 - GYM A ✅ HECHO -->
+      <div class="dia rest">
+        <div class="dia-header">
+          <div class="dia-fecha"><div class="dd">26</div><div class="dm">Mar</div></div>
+          <div class="dia-color" style="background:var(--green)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">✅ Completado · Gimnasio · Día A</div>
+            <div class="dia-nombre">TREN INFERIOR — HECHO</div>
+            <div class="dia-sub">Hack Squat 80kg · Curl 70kg · Prensa 40kg · Extensión 80kg · Sin DOMS 💪</div>
+          </div>
+          <div class="dia-chip" style="color:var(--green);border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.08)">✅</div>
+        </div>
+      </div>
+
+      <!-- MIÉRCOLES 27 - REGENERATIVO -->
+      <div class="dia" id="dia-27">
+        <div class="dia-header" onclick="toggleDia('dia-27')">
+          <div class="dia-fecha"><div class="dd">27</div><div class="dm">Mié</div></div>
+          <div class="dia-color" style="background:var(--green)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🟢 Carrera · Regenerativo</div>
+            <div class="dia-nombre">RODAJE SUAVE 6 KM</div>
+            <div class="dia-sub">FC máx 140 lpm · Activa circulación post-piernas</div>
+          </div>
+          <div class="dia-chip" style="color:var(--green);border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.06)">6 KM</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-27">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">6 km Z1-Z2 muy suave</div>
+              <div class="rf-detail">FC máxima 140 lpm. Aunque no sientas DOMS, el regenerativo activa la circulación y acelera la recuperación muscular. Ritmo de paseo rápido, sin mirar el pace.</div>
+              <span class="rf-chip" style="border-color:rgba(0,230,118,0.3);color:var(--green);background:rgba(0,230,118,0.06)">Z1-Z2 · máx 140 lpm</span>
+            </div>
+          </div>
+          <div class="nota info"><strong>Sin DOMS hoy no significa que no necesites esto.</strong> El regenerativo sigue siendo útil — prepara mejor las piernas para el Z2+Strides de mañana.</div>
+        </div>
+      </div>
+
+      <!-- JUEVES 28 - Z2 + STRIDES -->
+      <div class="dia" id="dia-28">
+        <div class="dia-header" onclick="toggleDia('dia-28')">
+          <div class="dia-fecha"><div class="dd">28</div><div class="dm">Jue</div></div>
+          <div class="dia-color" style="background:var(--z2)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🔵 Carrera · Z2 + Strides</div>
+            <div class="dia-nombre">BASE + ACELERONES 9 KM</div>
+            <div class="dia-sub">8 km Z2 + 4×100m strides · +1 km respecto al plan anterior</div>
+          </div>
+          <div class="dia-chip" style="color:var(--z2);border-color:rgba(41,182,246,0.3);background:rgba(41,182,246,0.08)">9 KM</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-28">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">8 km Z2 continuo</div>
+              <div class="rf-detail">FC 130–148 lpm. Objetivo: mantener esa sensación cómoda que ya conoces. Guarda energía para los strides al final.</div>
+              <span class="rf-chip chip-z2">Z2 · 130–148 lpm</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">02</div>
+            <div class="rf-body">
+              <div class="rf-name">4 × 100m Strides</div>
+              <div class="rf-detail">Al 85%: suelto, fluido, buena técnica. 60 seg caminando entre cada uno. Foco en zancada larga y contacto breve con el suelo.</div>
+              <span class="rf-chip chip-fast">85% · Fluido</span>
+              <span class="rf-chip chip-walk" style="margin-left:4px">60s walk</span>
+            </div>
+          </div>
+          <div class="nota"><strong>Métrica clave:</strong> anota el pace promedio del Z2. Debería ser igual o mejor que el largo del sábado pasado (15.4 km a FC 138 lpm). Si mejora, la adaptación está ocurriendo.</div>
+        </div>
+      </div>
+
+      <!-- VIERNES 29 - GYM B -->
+      <div class="dia" id="dia-29">
+        <div class="dia-header" onclick="toggleDia('dia-29')">
+          <div class="dia-fecha"><div class="dd">29</div><div class="dm">Vie</div></div>
+          <div class="dia-color" style="background:var(--gym)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">💪 Gimnasio · Día B</div>
+            <div class="dia-nombre">TREN SUPERIOR · Semana 2</div>
+            <div class="dia-sub">Rutina completa · Cargas objetivo actualizadas</div>
+          </div>
+          <div class="dia-chip" style="color:var(--gym);border-color:rgba(176,111,255,0.3);background:rgba(176,111,255,0.08)">40 MIN</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-29">
+          <div class="nota"><strong>Cargas objetivo hoy:</strong> Pull down 33 kg · Remo 33 kg · Press inclinado 13.5 kg/mano · Face pull 42 kg · Press hombro 13.5 kg/mano · Curl bíceps 40 kg.</div>
+          <div class="nota info" style="margin-top:8px"><strong>Primera vez completo el Día B</strong> — la semana pasada no llegaste al bloque de core ni cable crossover. Esta semana sí. Usa el timer para no pasarte de 40 min.</div>
+          <div style="text-align:center;margin-top:12px"><button onclick="showView('gym-b')" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;background:var(--gym);color:#fff;border:none;padding:12px 28px;cursor:pointer;width:100%">VER RUTINA COMPLETA DÍA B →</button></div>
+        </div>
+      </div>
+
+      <!-- SÁBADO 30 - TEMPO -->
+      <div class="dia" id="dia-30">
+        <div class="dia-header" onclick="toggleDia('dia-30')">
+          <div class="dia-fecha"><div class="dd">30</div><div class="dm">Sáb</div></div>
+          <div class="dia-color" style="background:#ffd54f"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🟡 Carrera · Umbral</div>
+            <div class="dia-nombre">PRIMER TEMPO · 10 KM</div>
+            <div class="dia-sub">2km calentamiento + 3×8 min Z4 (160–168 lpm) + 2km calma</div>
+          </div>
+          <div class="dia-chip" style="color:#ffd54f;border-color:rgba(255,213,79,0.3);background:rgba(255,213,79,0.06)">10 KM</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-30">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">2 km calentamiento Z2</div>
+              <div class="rf-detail">Suave, FC bajo 145 lpm. Los primeros 10 min son clave para el tempo — no saltes el calentamiento.</div>
+              <span class="rf-chip chip-z2">Z2</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">02</div>
+            <div class="rf-body">
+              <div class="rf-name">3 × 8 min en Z4 (160–168 lpm)</div>
+              <div class="rf-detail">Ritmo sostenido, exigente pero controlado. 3 min de trote suave entre cada intervalo. Empieza conservador — si el 1° se siente fácil, sube un poco en el 2° y 3°. No al revés.</div>
+              <span class="rf-chip chip-z4">3× · 8 min · Z4</span>
+              <span class="rf-chip chip-z2" style="margin-left:4px">3' recuperación</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">03</div>
+            <div class="rf-body">
+              <div class="rf-name">2 km vuelta a la calma</div>
+              <div class="rf-detail">Trote muy suave. FC bajando a Z1. No pares de golpe.</div>
+              <span class="rf-chip chip-walk">Calma Z1</span>
+            </div>
+          </div>
+          <div class="nota warn"><strong>Semáforo HRV:</strong> si amaneces con HRV bajo (&lt;57 ms), convierte este tempo en Z2 fácil de 10 km. El tempo en cuerpo fatigado no adapta — solo desgasta.</div>
+        </div>
+      </div>
+
+      <!-- DOMINGO 31 - LARGO 18 -->
+      <div class="dia" id="dia-30">
+        <div class="dia-header" onclick="toggleDia('dia-30')">
+          <div class="dia-fecha"><div class="dd">31</div><div class="dm">Dom</div></div>
+          <div class="dia-color" style="background:var(--largo)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">🩵 Carrera · Tirada Larga</div>
+            <div class="dia-nombre">LARGO Z2 · 18 KM</div>
+            <div class="dia-sub">16 km Z2 + 2 km progresivos Z3 · Gel km 10 y km 15</div>
+          </div>
+          <div class="dia-chip" style="color:var(--largo);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06)">18 KM</div>
+          <div class="dia-chevron">▼</div>
+        </div>
+        <div class="dia-content" id="content-30">
+          <div class="run-fase">
+            <div class="rf-num">01</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 0–5 · Activación Z2</div>
+              <div class="rf-detail">Suave. Dale tiempo al cuerpo. FC estabilizándose. No mires el pace.</div>
+              <span class="rf-chip chip-z2">Z2 · Paciencia</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">02</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 5–10 · Crucero Z2</div>
+              <div class="rf-detail">Hidratación cada 20 min. Ritmo estable. Empiezas a sentirte bien.</div>
+              <span class="rf-chip chip-z2">Z2 · 130–148 lpm</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">03</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 10 · Primer gel</div>
+              <div class="rf-detail">Gel + agua. Aunque no sientas necesidad. Práctica de carrera.</div>
+              <span class="rf-chip chip-gel">Gel 1</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">04</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 10–15 · Mantener Z2</div>
+              <div class="rf-detail">Atención al cardiac drift. Si la FC sube sobre 151, baja el ritmo.</div>
+              <span class="rf-chip chip-z2">Z2</span>
+            </div>
+          </div>
+          <div class="run-fase">
+            <div class="rf-num">05</div>
+            <div class="rf-body">
+              <div class="rf-name">Km 15 · Segundo gel + progresivo</div>
+              <div class="rf-detail">Gel 2 + agua. Los últimos 3 km sube levemente a Z3 (148–158 lpm). Simula el esfuerzo del final del maratón. Si no puedes, quédate en Z2 — no hay problema.</div>
+              <span class="rf-chip chip-gel" style="margin-right:4px">Gel 2</span>
+              <span class="rf-chip chip-z4" style="background:rgba(0,229,255,0.06);border-color:rgba(0,229,255,0.3);color:var(--largo)">Z3 · 148–158 lpm</span>
+            </div>
+          </div>
+          <div class="nota"><strong>Post-largo:</strong> proteína 50g + carbohidrato 80g en los primeros 30 min. Crítico para recuperar para la semana siguiente.</div>
+        </div>
+      </div>
+
+      <!-- LUNES 1 JUN - DESCANSO -->
+      <div class="dia rest">
+        <div class="dia-header">
+          <div class="dia-fecha"><div class="dd">1</div><div class="dm">Jun</div></div>
+          <div class="dia-color" style="background:var(--muted2)"></div>
+          <div class="dia-body-info">
+            <div class="dia-tipo">— Descanso total</div>
+            <div class="dia-nombre">RECUPERACIÓN</div>
+            <div class="dia-sub">Sueño 7.5–8h · Proteína alta · Revisa HRV · Prepara siguiente semana</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- GYM A -->
+<!-- ======================================================= -->
+<div class="view" id="view-gym-a">
+  <div class="hero">
+    <div class="hero-badge">💪 Día A · Tren Inferior</div>
+    <h1>INFERIOR<br>NOMADS GYM</h1>
+    <p>5 bloques superseries · ~40 min · Ya llegas con 5 min trote</p>
+    <div class="hero-meta">
+      <div class="hm"><div class="hm-l">Sem 1</div><div class="hm-v" style="color:var(--accent2)">Aprender</div></div>
+      <div class="hm"><div class="hm-l">Sem 2</div><div class="hm-v" style="color:var(--accent)">+5% carga</div></div>
+      <div class="hm"><div class="hm-l">Flujo</div><div class="hm-v" style="color:var(--orange)">A→B→60s</div></div>
+    </div>
+  </div>
+
+  <!-- B1 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 01 · 4 SERIES · CUÁDRICEPS + ISQUIOS</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Hack Squat</div>
+        <div class="ss-specs"><span class="ss-spec reps">10 reps</span><span class="ss-spec kg">Sem1: cómodo · Sem2: +5%</span></div>
+        <div class="ss-tip">Bajada 3 seg, explosivo arriba. Rodillas sobre pies. No bloquear arriba.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 60s</div>
+        <div class="ss-name">Curl Femoral Sentado</div>
+        <div class="ss-specs"><span class="ss-spec reps">12 reps</span></div>
+        <div class="ss-tip">Excéntrico lento 3 seg bajando. No soltar con rebote al fondo.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(60,'Bloque 1 — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">60 seg descanso entre superseries</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dA1">
+        <div class="dot" onclick="markDot('dA1',0)">1</div><div class="dot" onclick="markDot('dA1',1)">2</div><div class="dot" onclick="markDot('dA1',2)">3</div><div class="dot" onclick="markDot('dA1',3)">4</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dA1')">reset</span>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 02 · 3 SERIES · UNILATERAL + EXTENSIÓN</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Prensa Unilateral</div>
+        <div class="ss-specs"><span class="ss-spec reps">10 reps/lado</span></div>
+        <div class="ss-tip">Un pie al centro. Rodilla alineada. Baja hasta 90°.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 60s</div>
+        <div class="ss-name">Extensión Cuádriceps</div>
+        <div class="ss-specs"><span class="ss-spec reps">12 reps</span></div>
+        <div class="ss-tip">Solo último tercio del rango. Menos estrés patelar, más aislamiento.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(60,'Bloque 2 — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">60 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dA2">
+        <div class="dot" onclick="markDot('dA2',0)">1</div><div class="dot" onclick="markDot('dA2',1)">2</div><div class="dot" onclick="markDot('dA2',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dA2')">reset</span>
+    </div>
+  </div>
+
+  <!-- B3 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 03 · 3 SERIES · GLÚTEO ⭐ + ABDUCTORES</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Booty Builder</div>
+        <div class="ss-specs"><span class="ss-spec reps">12 reps</span></div>
+        <div class="ss-tip">⭐ Clave para carrera. Contracción máxima 1 seg arriba. No rebotar abajo.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 60s</div>
+        <div class="ss-name">Abductores Máquina</div>
+        <div class="ss-specs"><span class="ss-spec reps">15 reps</span></div>
+        <div class="ss-tip">Movimiento controlado. Espalda apoyada. Estabilizador de cadera en carrera.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(60,'Bloque 3 — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">60 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dA3">
+        <div class="dot" onclick="markDot('dA3',0)">1</div><div class="dot" onclick="markDot('dA3',1)">2</div><div class="dot" onclick="markDot('dA3',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dA3')">reset</span>
+    </div>
+  </div>
+
+  <!-- B4 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 04 · 3 SERIES · ADUCTORES + PANTORRILLA</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Aductores Máquina</div>
+        <div class="ss-specs"><span class="ss-spec reps">15 reps</span></div>
+        <div class="ss-tip">Rango completo. Sin apoyar codos. Estabilidad de ingle.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 45s</div>
+        <div class="ss-name">Elevación Pantorrilla Excéntrica ⭐</div>
+        <div class="ss-specs"><span class="ss-spec reps">15 reps</span></div>
+        <div class="ss-tip">Sube con 2 pies, baja con 1 en 4 seg. Anti-tendinopatía Aquiles.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(45,'Bloque 4 — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">45 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dA4">
+        <div class="dot" onclick="markDot('dA4',0)">1</div><div class="dot" onclick="markDot('dA4',1)">2</div><div class="dot" onclick="markDot('dA4',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dA4')">reset</span>
+    </div>
+  </div>
+
+  <!-- B5 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 05 · 3 SERIES · POTENCIA + CORE</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Saltos al Cajón</div>
+        <div class="ss-specs"><span class="ss-spec reps">5 reps</span><span class="ss-spec">Explosivo</span></div>
+        <div class="ss-tip">Landing suave absorbiendo con rodillas. Baja caminando, no saltando atrás.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 45s</div>
+        <div class="ss-name">Plancha 30s + Dead Bug 8/lado</div>
+        <div class="ss-specs"><span class="ss-spec reps">1 ronda</span></div>
+        <div class="ss-tip">Core anti-rotatorio. Lumbar pegada al suelo en dead bug siempre.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(45,'Bloque 5 — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">45 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dA5">
+        <div class="dot" onclick="markDot('dA5',0)">1</div><div class="dot" onclick="markDot('dA5',1)">2</div><div class="dot" onclick="markDot('dA5',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dA5')">reset</span>
+    </div>
+  </div>
+  <footer>Día A completo · <strong>Nomads Gym</strong> · Sub 3h30 · Maratón Santiago 2027</footer>
+</div>
+
+<!-- ======================================================= -->
+<!-- GYM B -->
+<!-- ======================================================= -->
+<div class="view" id="view-gym-b">
+  <div class="hero">
+    <div class="hero-badge">💪 Día B · Tren Superior</div>
+    <h1>SUPERIOR<br>NOMADS GYM</h1>
+    <p>5 bloques superseries · ~40 min · Ya llegas con 5 min trote</p>
+    <div class="hero-meta">
+      <div class="hm"><div class="hm-l">Sem 1 (Vie 23)</div><div class="hm-v" style="color:var(--accent2)">+5% vs pasado</div></div>
+      <div class="hm"><div class="hm-l">Sem 2 (Vie 29)</div><div class="hm-v" style="color:var(--accent)">+5% más</div></div>
+    </div>
+  </div>
+
+  <!-- B1 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 01 · 4 SERIES · DORSAL VERTICAL + HORIZONTAL</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Pull Down / Jalón</div>
+        <div class="ss-specs"><span class="ss-spec reps">10 reps</span><span class="ss-spec kg">Sem1: 33kg · Sem2: 35kg</span></div>
+        <div class="ss-tip">Escápulas bajas antes de tirar. No encogerse. Codo hacia atrás y abajo.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 60s</div>
+        <div class="ss-name">Remo Polea Baja</div>
+        <div class="ss-specs"><span class="ss-spec reps">12 reps</span><span class="ss-spec kg">Sem1: 33kg · Sem2: 35kg</span></div>
+        <div class="ss-tip">Codos pegados al cuerpo. Squeeze escápulas al final. No balancear el tronco.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(60,'Bloque 1B — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">60 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dB1">
+        <div class="dot" onclick="markDot('dB1',0)">1</div><div class="dot" onclick="markDot('dB1',1)">2</div><div class="dot" onclick="markDot('dB1',2)">3</div><div class="dot" onclick="markDot('dB1',3)">4</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dB1')">reset</span>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 02 · 3 SERIES · PECHO + HOMBRO POSTERIOR</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Press Inclinado Mancuernas</div>
+        <div class="ss-specs"><span class="ss-spec reps">10 reps</span><span class="ss-spec kg">Sem1: 13.5kg · Sem2: 15kg</span></div>
+        <div class="ss-tip">Bajada controlada hasta altura de pecho. No rebotar. Codos 45° del tronco.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 60s</div>
+        <div class="ss-name">Face Pull Polea Alta</div>
+        <div class="ss-specs"><span class="ss-spec reps">15 reps</span><span class="ss-spec kg">Sem1: 42kg · Sem2: 45kg</span></div>
+        <div class="ss-tip">Codos a altura de hombros. Tirar hacia la cara, rotación externa al final.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(60,'Bloque 2B — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">60 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dB2">
+        <div class="dot" onclick="markDot('dB2',0)">1</div><div class="dot" onclick="markDot('dB2',1)">2</div><div class="dot" onclick="markDot('dB2',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dB2')">reset</span>
+    </div>
+  </div>
+
+  <!-- B3 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 03 · 3 SERIES · HOMBRO + BÍCEPS</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Press Hombro Mancuernas</div>
+        <div class="ss-specs"><span class="ss-spec reps">10 reps</span><span class="ss-spec kg">Sem1: 13.5kg · Sem2: 15kg</span></div>
+        <div class="ss-tip">No bloquear codo arriba. Core activo. No arquear la espalda.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 60s</div>
+        <div class="ss-name">Curl Bíceps Polea Baja</div>
+        <div class="ss-specs"><span class="ss-spec reps">12 reps</span><span class="ss-spec kg">Sem1: 40kg · Sem2: 42kg</span></div>
+        <div class="ss-tip">Tensión constante en todo el rango. Codos fijos al cuerpo. Sin balancear.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(60,'Bloque 3B — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">60 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dB3">
+        <div class="dot" onclick="markDot('dB3',0)">1</div><div class="dot" onclick="markDot('dB3',1)">2</div><div class="dot" onclick="markDot('dB3',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dB3')">reset</span>
+    </div>
+  </div>
+
+  <!-- B4 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 04 · 3 SERIES · TRÍCEPS + PECTORAL</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Extensión Tríceps Cuerda</div>
+        <div class="ss-specs"><span class="ss-spec reps">12 reps</span></div>
+        <div class="ss-tip">Codos fijos. Separar manos al fondo. Tríceps = 65% del brazo.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 45s</div>
+        <div class="ss-name">Cable Crossover Pectoral</div>
+        <div class="ss-specs"><span class="ss-spec reps">15 reps</span><span class="ss-spec">Carga ligera</span></div>
+        <div class="ss-tip">Codos semiflexionados. Convergencia al centro. Foco en contracción pectoral.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(45,'Bloque 4B — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">45 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dB4">
+        <div class="dot" onclick="markDot('dB4',0)">1</div><div class="dot" onclick="markDot('dB4',1)">2</div><div class="dot" onclick="markDot('dB4',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dB4')">reset</span>
+    </div>
+  </div>
+
+  <!-- B5 -->
+  <div class="bloque-mini">
+    <div class="bm-tag">BLOQUE 05 · 3 SERIES · CORE DINÁMICO</div>
+    <div class="superserie">
+      <div class="ss-ej a">
+        <div class="ss-letter">A → inmediato</div>
+        <div class="ss-name">Rueda Abdominal</div>
+        <div class="ss-specs"><span class="ss-spec reps">8–10 reps</span></div>
+        <div class="ss-tip">Control absoluto en bajada. Lumbar neutra. Reduce rango si es necesario.</div>
+      </div>
+      <div class="ss-arrow">→</div>
+      <div class="ss-ej b">
+        <div class="ss-letter">B → luego 45s</div>
+        <div class="ss-name">Mountain Climber</div>
+        <div class="ss-specs"><span class="ss-spec reps">20 reps</span></div>
+        <div class="ss-tip">Caderas neutras. Ritmo controlado. Transferencia directa a cadena de carrera.</div>
+      </div>
+    </div>
+    <div class="descanso-row" onclick="startTimer(45,'Bloque 5B — Serie siguiente')">
+      <span class="descanso-icon">⏱</span><span class="dr-text">45 seg descanso</span><button class="dr-btn">INICIAR</button>
+    </div>
+    <div class="series-track">
+      <span class="st-label">Series</span>
+      <div class="st-dots" id="dB5">
+        <div class="dot" onclick="markDot('dB5',0)">1</div><div class="dot" onclick="markDot('dB5',1)">2</div><div class="dot" onclick="markDot('dB5',2)">3</div>
+      </div>
+      <span class="st-reset" onclick="resetDots('dB5')">reset</span>
+    </div>
+  </div>
+  <footer>Día B completo · <strong>Nomads Gym</strong> · Sub 3h30 · Maratón Santiago 2027</footer>
+</div>
+
+<script>
+  function showView(id){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('view-'+id).classList.add('active');
+    const map={'resumen':0,'sem1':1,'sem2':2,'gym-a':3,'gym-b':4};
+    if(map[id]!==undefined) document.querySelectorAll('.nav-tab')[map[id]].classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  function toggleDia(id){
+    const dia=document.getElementById(id);
+    const header=dia.querySelector('.dia-header');
+    const content=dia.querySelector('.dia-content');
+    const isOpen=content.classList.contains('open');
+    document.querySelectorAll('.dia-content').forEach(c=>c.classList.remove('open'));
+    document.querySelectorAll('.dia-header').forEach(h=>h.classList.remove('expanded'));
+    if(!isOpen){
+      content.classList.add('open');
+      header.classList.add('expanded');
+      setTimeout(()=>dia.scrollIntoView({behavior:'smooth',block:'start'}),50);
+    }
+  }
+
+  function markDot(groupId,idx){
+    const group=document.getElementById(groupId);
+    const dots=group.querySelectorAll('.dot');
+    dots.forEach((d,i)=>{if(i<=idx)d.classList.add('done');else d.classList.remove('done')});
+  }
+  function resetDots(groupId){
+    document.getElementById(groupId).querySelectorAll('.dot').forEach(d=>d.classList.remove('done'));
+  }
+
+  let timerInterval=null,timerSeconds=0,timerTotal=0;
+  function startTimer(seconds,label){
+    clearInterval(timerInterval);
+    timerSeconds=seconds; timerTotal=seconds;
+    const overlay=document.getElementById('timerOverlay');
+    const display=document.getElementById('timerDisplay');
+    const bar=document.getElementById('timerBar');
+    overlay.classList.add('show');
+    display.className='timer-display'; bar.className='timer-bar';
+    bar.style.width='100%'; updateTimerDisplay();
+    timerInterval=setInterval(()=>{
+      timerSeconds--;updateTimerDisplay();
+      if(timerSeconds<=0){
+        clearInterval(timerInterval);
+        display.className='timer-display done';display.textContent='¡YA!';bar.style.width='0%';
+        if(navigator.vibrate)navigator.vibrate([200,100,200]);
+      }
+    },1000);
+  }
+  function updateTimerDisplay(){
+    const display=document.getElementById('timerDisplay');
+    const bar=document.getElementById('timerBar');
+    display.textContent=timerSeconds;
+    bar.style.width=(timerSeconds/timerTotal*100)+'%';
+    if(timerSeconds<=10){display.className='timer-display urgent';bar.className='timer-bar urgent';}
+  }
+  function skipTimer(){clearInterval(timerInterval);document.getElementById('timerOverlay').classList.remove('show');}
+  function stopTimer(){clearInterval(timerInterval);document.getElementById('timerOverlay').classList.remove('show');}
+</script>
+</body>
+</html>
